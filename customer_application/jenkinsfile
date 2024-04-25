@@ -2,18 +2,14 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool 'apache-maven-3.9.5'
-    }
-
-    tools {
-        jdk 'java-17'
+        MVN_HOME = tool 'apache-maven-3.9.5'
     }
 
     stages {
         stage('Build'){
             steps {
                 dir('customer_application') {
-                    bat "${env.MAVEN_HOME}\\bin\\mvn clean install -DskipTests"
+                    bat "${MVN_HOME}/bin/mvn clean install -DskipTests"
                 }
             }
         }
@@ -21,7 +17,7 @@ pipeline {
         stage('Test'){
             steps{
                 dir('customer_application') {
-                    bat "${env.MAVEN_HOME}\\bin\\mvn test"
+                    bat "${MVN_HOME}/bin/mvn test"
                 }
             }
         }
