@@ -2,8 +2,7 @@ pipeline {
 	agent any
 
 	environment {
-		M2_HOME = tool 'apache-maven-3.9.5'
-		PATH = "$PATH:${env.M2_HOME}/bin"
+		mavenHome = tool 'apache-maven-3.9.5'
 	}
 
 	tools {
@@ -15,8 +14,11 @@ pipeline {
 		stage('Build'){
 			steps {
 				script {
-					dir('customer_application') {
-						bat "mvn clean install -DskipTests"
+					def mvnHome = tool name: 'apache-maven-3.9.5', type: 'maven'
+					withEnv(["PATH+MAVEN=${mvnHome}/bin"]) {
+						dir('customer_application') {
+							bat "mvn clean install -DskipTests"
+						}
 					}
 				}
 			}
@@ -25,8 +27,11 @@ pipeline {
 		stage('Test'){
 			steps{
 				script {
-					dir('customer_application') {
-						bat "mvn test"
+					def mvnHome = tool name: 'apache-maven-3.9.5', type: 'maven'
+					withEnv(["PATH+MAVEN=${mvnHome}/bin"]) {
+						dir('customer_application') {
+							bat "mvn test"
+						}
 					}
 				}
 			}
