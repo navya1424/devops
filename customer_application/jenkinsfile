@@ -1,41 +1,35 @@
 pipeline {
-    agent any
+	agent any
 
-    environment {
-        mavenHome = tool 'apache-maven-3.9.5'
-    }
+	environment {
+		M2_HOME = tool 'apache-maven-3.9.5'
+		PATH = "$PATH:${env.M2_HOME}/bin"
+	}
 
-    tools {
-        jdk 'java-17'
-    }
+	tools {
+		jdk 'java-17'
+	}
 
-    stages {
+	stages {
 
-        stage('Build') {
-            steps {
-                script {
-                    def mvnHome = tool name: 'apache-maven-3.9.5', type: 'maven'
-                    withEnv(["PATH+MAVEN=${mvnHome}/bin"]) {
-                        dir('customer_application') {
-                            bat "mvn clean install -DskipTests"
-                        }
-                    }
-                }
-            }
-        }
+		stage('Build'){
+			steps {
+				script {
+					dir('customer_application') {
+						bat "mvn clean install -DskipTests"
+					}
+				}
+			}
+		}
 
-        stage('Test') {
-            steps {
-                script {
-                    def mvnHome = tool name: 'apache-maven-3.9.5', type: 'maven'
-                    withEnv(["PATH+MAVEN=${mvnHome}/bin"]) {
-                        dir('customer_application') {
-                            bat "mvn test"
-                        }
-                    }
-                }
-            }
-        }
-    }
+		stage('Test'){
+			steps{
+				script {
+					dir('customer_application') {
+						bat "mvn test"
+					}
+				}
+			}
+		}
+	}
 }
-
